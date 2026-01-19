@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Date Invitation</title>
+
   <style>
     body {
       margin: 0;
@@ -13,38 +14,56 @@
       align-items: center;
       font-family: Arial, sans-serif;
       background: linear-gradient(to bottom, #ff6f61, #ffb88c);
-      color: #333;
       text-align: center;
     }
+
     .container {
-      padding: 20px;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      max-width: 500px;
+      padding: 25px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+      max-width: 520px;
       width: 90%;
     }
+
     h1 {
-      font-size: 2em;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
+
+    .confirmation-box {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      background: #fff3f3;
+      display: none;
+    }
+
+    .confirmation-box p {
+      margin: 8px 0;
+      font-size: 1.1em;
+    }
+
     .button-container {
+      margin-top: 15px;
       display: flex;
       justify-content: center;
       gap: 20px;
     }
+
     button {
-      padding: 10px 20px;
+      padding: 10px 22px;
       font-size: 1.1em;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
-      transition: transform 0.3s;
+      transition: transform 0.3s ease;
     }
+
     #yesButton {
       background-color: #4CAF50;
       color: white;
     }
+
     #noButton {
       background-color: #ff4444;
       color: white;
@@ -54,44 +73,60 @@
 
 <body>
   <div class="container">
-    <h1 id="question">
+    <h1 id="mainQuestion">
       On the off chance that I might be a good guy, how about I take you out some time? 💖
     </h1>
 
-    <div class="button-container">
-      <button id="yesButton" onclick="handleYes()">Yes</button>
-      <button id="noButton" onclick="handleNo()">No</button>
+    <div id="confirmationBox" class="confirmation-box">
+      <p id="reactionText"></p>
+      <p><strong>Would you like to go out some time?</strong></p>
+
+      <div class="button-container">
+        <button id="yesButton" onclick="handleYes()">Yes</button>
+        <button id="noButton" onclick="handleNo()">No</button>
+      </div>
+    </div>
+
+    <!-- Initial buttons -->
+    <div id="initialButtons" class="button-container">
+      <button id="yesButtonInitial" onclick="handleYes()">Yes</button>
+      <button id="noButtonInitial" onclick="handleNo()">No</button>
     </div>
   </div>
 
   <script>
-    let noClickCount = 0;
-    let yesButtonScale = 1;
+    let noCount = 0;
+    let yesScale = 1;
+
+    function enlargeYes() {
+      yesScale += 0.25; // noticeable every time
+      document.querySelectorAll('#yesButton, #yesButtonInitial')
+        .forEach(btn => btn.style.transform = `scale(${yesScale})`);
+    }
 
     function handleNo() {
-      noClickCount++;
+      noCount++;
+      enlargeYes();
 
-      const question = document.getElementById("question");
-      const yesButton = document.getElementById("yesButton");
+      const confirmationBox = document.getElementById("confirmationBox");
+      const reactionText = document.getElementById("reactionText");
+      const initialButtons = document.getElementById("initialButtons");
 
-      if (noClickCount === 1) {
-        question.textContent = "Are you sure? Let’s try that again.";
-      } 
-      else if (noClickCount === 2) {
-        question.textContent = "Hmm… we seem to be experiencing technical issues.";
-        yesButtonScale += 0.2;
-        yesButton.style.transform = `scale(${yesButtonScale})`;
-      } 
-      else if (noClickCount === 3) {
-        question.textContent = "3 times the charm? 😌";
-        yesButtonScale += 0.3;
-        yesButton.style.transform = `scale(${yesButtonScale})`;
+      if (noCount === 1) {
+        initialButtons.style.display = "none";
+        confirmationBox.style.display = "block";
+        reactionText.textContent = "Are you sure? Let’s try that again.";
+      }
+      else if (noCount === 2) {
+        reactionText.textContent = "Hmm… we seem to be experiencing technical issues.";
+      }
+      else {
+        reactionText.textContent = "3 times the charm? 😌";
       }
     }
 
     function handleYes() {
-      // If they said no 3 times, send a flag to response.html
-      if (noClickCount >= 3) {
+      if (noCount >= 3) {
         window.location.href = "response.html?lateYes=true";
       } else {
         window.location.href = "response.html";

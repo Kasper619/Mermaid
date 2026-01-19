@@ -44,7 +44,7 @@
     }
 
     .button-container {
-      margin-top: 15px;
+      margin-top: 20px;
       display: flex;
       justify-content: center;
       gap: 20px;
@@ -60,12 +60,12 @@
     }
 
     #yesButton {
-      background-color: #4CAF50;
+      background-color: #4CAF50; /* GREEN */
       color: white;
     }
 
     #noButton {
-      background-color: #ff4444;
+      background-color: #ff4444; /* RED */
       color: white;
     }
   </style>
@@ -80,17 +80,11 @@
     <div id="confirmationBox" class="confirmation-box">
       <p id="reactionText"></p>
       <p><strong>Would you like to go out some time?</strong></p>
-
-      <div class="button-container">
-        <button id="yesButton" onclick="handleYes()">Yes</button>
-        <button id="noButton" onclick="handleNo()">No</button>
-      </div>
     </div>
 
-    <!-- Initial buttons -->
-    <div id="initialButtons" class="button-container">
-      <button id="yesButtonInitial" onclick="handleYes()">Yes</button>
-      <button id="noButtonInitial" onclick="handleNo()">No</button>
+    <div class="button-container">
+      <button id="yesButton" onclick="handleYes()">Yes</button>
+      <button id="noButton" onclick="handleNo()">No</button>
     </div>
   </div>
 
@@ -99,9 +93,9 @@
     let yesScale = 1;
 
     function enlargeYes() {
-      yesScale += 0.25; // noticeable every time
-      document.querySelectorAll('#yesButton, #yesButtonInitial')
-        .forEach(btn => btn.style.transform = `scale(${yesScale})`);
+      yesScale += 0.25; // noticeable growth every time
+      document.getElementById("yesButton").style.transform =
+        `scale(${yesScale})`;
     }
 
     function handleNo() {
@@ -110,22 +104,23 @@
 
       const confirmationBox = document.getElementById("confirmationBox");
       const reactionText = document.getElementById("reactionText");
-      const initialButtons = document.getElementById("initialButtons");
+
+      confirmationBox.style.display = "block";
 
       if (noCount === 1) {
-        initialButtons.style.display = "none";
-        confirmationBox.style.display = "block";
-        reactionText.textContent = "Are you sure? Let’s try that again.";
-      }
-      else if (noCount === 2) {
-        reactionText.textContent = "Hmm… we seem to be experiencing technical issues.";
-      }
-      else {
-        reactionText.textContent = "3 times the charm? 😌";
+        reactionText.textContent =
+          "Are you sure? Let’s try that again.";
+      } else if (noCount === 2) {
+        reactionText.textContent =
+          "Hmm… we seem to be experiencing technical issues.";
+      } else {
+        reactionText.textContent =
+          "3 times the charm? 😌";
       }
     }
 
     function handleYes() {
+      // ALWAYS navigate to a separate page
       if (noCount >= 3) {
         window.location.href = "response.html?lateYes=true";
       } else {
